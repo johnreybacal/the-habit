@@ -1,8 +1,9 @@
-import { useEffect, useRef, useState } from "react";
+import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
 import { Habit } from "../types";
 
 interface FormModalProps {
   isOpen: boolean;
+  setIsOpen: Dispatch<SetStateAction<boolean>>;
   habit: Habit;
   onSubmit: (habit: Habit) => void;
 }
@@ -32,10 +33,11 @@ export default function FormModal(props: FormModalProps) {
   function onCreate() {
     setHabit(emptyHabit);
     modalRef.current?.showModal();
+    props.setIsOpen(true);
   }
 
   function closeModal() {
-    modalRef.current?.close();
+    props.setIsOpen(false);
   }
 
   function onSubmit() {

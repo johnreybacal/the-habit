@@ -2,7 +2,7 @@
 
 import FormModal from "@/components/FormModal";
 import Header from "@/components/Header";
-import { List } from "@/components/List";
+import List from "@/components/List";
 import { Habit } from "@/types";
 import { useState } from "react";
 
@@ -13,9 +13,9 @@ const emptyHabit: Habit = {
 };
 
 export default function Planner() {
-  const [isModalOpen] = useState(false);
+  const [isModalOpen, setIsModalOpen] = useState(false);
   const [habits, setHabits] = useState<Habit[]>([]);
-  const [currentHabit] = useState<Habit>({ ...emptyHabit });
+  const [currentHabit, setCurrentHabit] = useState<Habit>({ ...emptyHabit });
 
   function onSubmit(habit: Habit) {
     if (habit.id === "") {
@@ -34,12 +34,18 @@ export default function Planner() {
     }
   }
 
+  function onEdit(habit: Habit) {
+    setCurrentHabit(habit);
+    setIsModalOpen(true);
+  }
+
   return (
     <div className="px-4 py-8 mx-auto flex flex-col items-center justify-center">
       <Header />
-      <List habits={habits} />
+      <List habits={habits} onClick={onEdit} />
       <FormModal
         isOpen={isModalOpen}
+        setIsOpen={setIsModalOpen}
         habit={currentHabit}
         onSubmit={onSubmit}
       />
