@@ -102,7 +102,7 @@ export default function FormModal(props: FormModalProps) {
               </div>
               <textarea
                 className={classNames(
-                  "textarea textarea-bordered w-full h-24",
+                  "textarea textarea-bordered w-full h-24 max-h-52",
                   {
                     "textarea-error": errors.description,
                   }
@@ -116,10 +116,7 @@ export default function FormModal(props: FormModalProps) {
             </label>
           </div>
           <div className="modal-action">
-            <button
-              className="btn btn-outline btn-secondary"
-              onClick={closeModal}
-            >
+            <button className="btn btn-outline" onClick={closeModal}>
               Cancel
             </button>
             <button className="btn btn-primary" onClick={onSubmit}>

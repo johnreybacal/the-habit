@@ -19,8 +19,8 @@ export default function List(props: ListProps) {
           }}
         >
           <div className="card-body">
-            <h2 className="card-title">{habit.name}</h2>
-            <p>{habit.description}</p>
+            <h2 className="card-title line-clamp-1">{habit.name}</h2>
+            <p className="line-clamp-2">{habit.description}</p>
           </div>
         </div>
       ))}

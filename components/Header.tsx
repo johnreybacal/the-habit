@@ -11,7 +11,7 @@ export default function Header() {
       </h1>
       <q className="my-4 text-center">
         We are what we repeatedly do. Excellence, then, is not an act, but a
-        habit
+        habit.
       </q>
       <div className="flex flex-col items-center sm:flex-row gap-0">
         <a href="./planner" className="link link-hover">

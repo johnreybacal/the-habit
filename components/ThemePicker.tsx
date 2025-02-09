@@ -1,4 +1,21 @@
+"use client";
+
+import { themes } from "@/tailwind.config";
+import classNames from "classnames";
+import { useEffect, useState } from "react";
+
 export default function ThemePicker() {
+  const [theme, setTheme] = useState("");
+
+  useEffect(() => {
+    const theme = localStorage.getItem("theme") ?? "light";
+    setTheme(theme);
+  }, []);
+
+  useEffect(() => {
+    document.querySelector("html")!.setAttribute("data-theme", theme);
+    localStorage.setItem("theme", theme);
+  }, [theme]);
   return (
     <div className="dropdown">
       <div tabIndex={0} role="button" className="link link-hover">
@@ -8,60 +25,20 @@ export default function ThemePicker() {
         tabIndex={0}
         className="dropdown-content bg-base-300 rounded-box z-[1] w-52 p-2 shadow-2xl"
       >
-        <li>
-          <input
-            type="radio"
-            name="theme-dropdown"
-            className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
-            aria-label="Light"
-            value="light"
-          />
-        </li>
-        <li>
-          <input
-            type="radio"
-            name="theme-dropdown"
-            className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
-            aria-label="Dark"
-            value="dark"
-          />
-        </li>
-        <li>
-          <input
-            type="radio"
-            name="theme-dropdown"
-            className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
-            aria-label="Retro"
-            value="retro"
-          />
-        </li>
-        <li>
-          <input
-            type="radio"
-            name="theme-dropdown"
-            className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
-            aria-label="Cyberpunk"
-            value="cyberpunk"
-          />
-        </li>
-        <li>
-          <input
-            type="radio"
-            name="theme-dropdown"
-            className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
-            aria-label="Valentine"
-            value="valentine"
-          />
-        </li>
-        <li>
-          <input
-            type="radio"
-            name="theme-dropdown"
-            className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
-            aria-label="Aqua"
-            value="aqua"
-          />
-        </li>
+        {themes.map((t) => (
+          <li
+            key={t}
+            className={classNames(
+              "btn btn-sm btn-block btn-ghost justify-start",
+              {
+                "btn-outline btn-active": t === theme,
+              }
+            )}
+            onClick={() => setTheme(t)}
+          >
+            {t}
+          </li>
+        ))}
       </ul>
     </div>
   );
