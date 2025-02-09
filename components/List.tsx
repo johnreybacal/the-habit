@@ -14,7 +14,7 @@ export default function List(props: ListProps) {
           className="card bg-base-100 w-full sm:w-96 shadow-xl"
           onClick={() => {
             if (props.onClick) {
-              props.onClick(habit);
+              props.onClick({ ...habit });
             }
           }}
         >

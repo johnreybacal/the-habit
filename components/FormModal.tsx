@@ -1,5 +1,7 @@
 import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
-import { Habit } from "../types";
+import { Habit, habitSchema } from "../types";
+import { ValidationError } from "yup";
+import classNames from "classnames";
 
 interface FormModalProps {
   isOpen: boolean;
@@ -16,10 +18,12 @@ const emptyHabit: Habit = {
 
 export default function FormModal(props: FormModalProps) {
   const [habit, setHabit] = useState<Habit>({ ...emptyHabit });
+  const [errors, setErrors] = useState<Habit>({ ...emptyHabit });
   const modalRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
     if (props.isOpen) {
+      setErrors(emptyHabit);
       modalRef.current?.showModal();
     } else {
       modalRef.current?.close();
@@ -32,7 +36,6 @@ export default function FormModal(props: FormModalProps) {
 
   function onCreate() {
     setHabit(emptyHabit);
-    modalRef.current?.showModal();
     props.setIsOpen(true);
   }
 
@@ -41,8 +44,28 @@ export default function FormModal(props: FormModalProps) {
   }
 
   function onSubmit() {
-    props.onSubmit(habit);
-    closeModal();
+    let validationErrors = {
+      ...emptyHabit,
+    };
+    setErrors(validationErrors);
+    try {
+      habitSchema.validateSync(habit, { abortEarly: false });
+      props.onSubmit(habit);
+      closeModal();
+    } catch (e) {
+      if (e instanceof ValidationError) {
+        e.errors.forEach((message) => {
+          const field = message.split(" ")[0];
+          console.log(field, message);
+          validationErrors = {
+            ...validationErrors,
+            [field]: message,
+          };
+        });
+        console.log(validationErrors);
+        setErrors(validationErrors);
+      }
+    }
   }
 
   return (
@@ -56,11 +79,14 @@ export default function FormModal(props: FormModalProps) {
             <label className="form-control w-full">
               <div className="label">
                 <span className="label-text">Name</span>
+                <span className="label-text-alt text-error">{errors.name}</span>
               </div>
               <input
                 type="text"
                 placeholder="Name of your habit"
-                className="input input-bordered w-full"
+                className={classNames("input input-bordered w-full", {
+                  "input-error": errors.name,
+                })}
                 value={habit.name}
                 onChange={(e) =>
                   setHabit({ ...habit, name: e.currentTarget.value })
@@ -70,9 +96,17 @@ export default function FormModal(props: FormModalProps) {
             <label className="form-control w-full">
               <div className="label">
                 <span className="label-text">Description</span>
+                <span className="label-text-alt text-error">
+                  {errors.description}
+                </span>
               </div>
               <textarea
-                className="textarea textarea-bordered w-full h-24"
+                className={classNames(
+                  "textarea textarea-bordered w-full h-24",
+                  {
+                    "textarea-error": errors.description,
+                  }
+                )}
                 placeholder="What is this habit about?"
                 value={habit.description}
                 onChange={(e) =>
