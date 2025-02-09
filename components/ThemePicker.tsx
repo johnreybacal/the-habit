@@ -13,8 +13,17 @@ export default function ThemePicker() {
             type="radio"
             name="theme-dropdown"
             className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
-            aria-label="Default"
-            value="default"
+            aria-label="Light"
+            value="light"
+          />
+        </li>
+        <li>
+          <input
+            type="radio"
+            name="theme-dropdown"
+            className="theme-controller btn btn-sm btn-block btn-ghost justify-start"
+            aria-label="Dark"
+            value="dark"
           />
         </li>
         <li>
