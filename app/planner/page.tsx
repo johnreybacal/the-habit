@@ -19,7 +19,9 @@ export default function Planner() {
 
   function onSubmit(habit: Habit) {
     if (habit.id === "") {
-      habit.id = crypto.randomUUID();
+      // habit.id = crypto.randomUUID();
+      // Temporary ID while no backend yet
+      habit.id = new Date().toISOString();
 
       setHabits([...habits, habit]);
     } else {
@@ -35,12 +37,12 @@ export default function Planner() {
   return (
     <div className="px-4 py-8 mx-auto flex flex-col items-center justify-center">
       <Header />
+      <List habits={habits} />
       <FormModal
         isOpen={isModalOpen}
         habit={currentHabit}
         onSubmit={onSubmit}
       />
-      <List habits={habits} />
     </div>
   );
 }

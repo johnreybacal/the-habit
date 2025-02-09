@@ -9,11 +9,11 @@ export default function Header() {
           the-habit
         </Link>
       </h1>
-      <q className="my-4">
+      <q className="my-4 text-center">
         We are what we repeatedly do. Excellence, then, is not an act, but a
         habit
       </q>
-      <div className="flex flex-row gap-2">
+      <div className="flex flex-col items-center sm:flex-row gap-0">
         <a href="./planner" className="link link-hover">
           <code>[planner]</code>
         </a>

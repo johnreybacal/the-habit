@@ -48,11 +48,7 @@ export default function FormModal(props: FormModalProps) {
       <button className="link link-hover" onClick={onCreate}>
         <code>[create a new habit]</code>
       </button>
-      <dialog
-        id="form-modal"
-        ref={modalRef}
-        className="modal modal-bottom sm:modal-middle"
-      >
+      <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
         <div className="modal-box">
           <div className="flex flex-col">
             <label className="form-control w-full">
@@ -84,7 +80,10 @@ export default function FormModal(props: FormModalProps) {
             </label>
           </div>
           <div className="modal-action">
-            <button className="btn btn-secondary" onClick={closeModal}>
+            <button
+              className="btn btn-outline btn-secondary"
+              onClick={closeModal}
+            >
               Cancel
             </button>
             <button className="btn btn-primary" onClick={onSubmit}>
