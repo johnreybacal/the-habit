@@ -1,14 +1,9 @@
-import { Dispatch, SetStateAction, useEffect, useRef, useState } from "react";
+import { FormEvent, useEffect, useRef, useState } from "react";
 import { Habit, habitSchema } from "../types";
 import { ValidationError } from "yup";
 import classNames from "classnames";
-
-interface FormModalProps {
-  isOpen: boolean;
-  setIsOpen: Dispatch<SetStateAction<boolean>>;
-  habit: Habit;
-  onSubmit: (habit: Habit) => void;
-}
+import { useAppSelector, useAppDispatch } from "@/lib/hooks";
+import { init, close, set, save } from "@/lib/habitSlice";
 
 const emptyHabit: Habit = {
   id: "",
@@ -16,42 +11,31 @@ const emptyHabit: Habit = {
   description: "",
 };
 
-export default function FormModal(props: FormModalProps) {
-  const [habit, setHabit] = useState<Habit>({ ...emptyHabit });
+export default function FormModal() {
+  const habit = useAppSelector((state) => state.habit.instance);
+  const isOpen = useAppSelector((state) => state.habit.isFormOpen);
+  const dispatch = useAppDispatch();
   const [errors, setErrors] = useState<Habit>({ ...emptyHabit });
   const modalRef = useRef<HTMLDialogElement>(null);
 
   useEffect(() => {
-    if (props.isOpen) {
+    if (isOpen) {
       setErrors(emptyHabit);
       modalRef.current?.showModal();
     } else {
       modalRef.current?.close();
     }
-  }, [props.isOpen]);
+  }, [isOpen]);
 
-  useEffect(() => {
-    setHabit(props.habit);
-  }, [props.habit]);
-
-  function onCreate() {
-    setHabit(emptyHabit);
-    props.setIsOpen(true);
-  }
-
-  function closeModal() {
-    props.setIsOpen(false);
-  }
-
-  function onSubmit() {
+  function onSubmit(e: FormEvent) {
+    e.preventDefault();
     let validationErrors = {
       ...emptyHabit,
     };
     setErrors(validationErrors);
     try {
       habitSchema.validateSync(habit, { abortEarly: false });
-      props.onSubmit(habit);
-      closeModal();
+      dispatch(save(habit));
     } catch (e) {
       if (e instanceof ValidationError) {
         e.errors.forEach((message) => {
@@ -62,7 +46,6 @@ export default function FormModal(props: FormModalProps) {
             [field]: message,
           };
         });
-        console.log(validationErrors);
         setErrors(validationErrors);
       }
     }
@@ -70,11 +53,11 @@ export default function FormModal(props: FormModalProps) {
 
   return (
     <>
-      <button className="link link-hover" onClick={onCreate}>
+      <button className="link link-hover" onClick={() => dispatch(init())}>
         <code>[create a new habit]</code>
       </button>
       <dialog ref={modalRef} className="modal modal-bottom sm:modal-middle">
-        <div className="modal-box">
+        <form className="modal-box" onSubmit={onSubmit}>
           <div className="flex flex-col">
             <label className="form-control w-full">
               <div className="label">
@@ -89,7 +72,7 @@ export default function FormModal(props: FormModalProps) {
                 })}
                 value={habit.name}
                 onChange={(e) =>
-                  setHabit({ ...habit, name: e.currentTarget.value })
+                  dispatch(set({ ...habit, name: e.currentTarget.value }))
                 }
               />
             </label>
@@ -110,20 +93,26 @@ export default function FormModal(props: FormModalProps) {
                 placeholder="What is this habit about?"
                 value={habit.description}
                 onChange={(e) =>
-                  setHabit({ ...habit, description: e.currentTarget.value })
+                  dispatch(
+                    set({ ...habit, description: e.currentTarget.value })
+                  )
                 }
               ></textarea>
             </label>
           </div>
           <div className="modal-action">
-            <button className="btn btn-outline" onClick={closeModal}>
+            <button
+              className="btn btn-outline"
+              type="button"
+              onClick={() => dispatch(close())}
+            >
               Cancel
             </button>
-            <button className="btn btn-primary" onClick={onSubmit}>
+            <button className="btn btn-primary" type="submit">
               {habit.id === "" ? "Create" : "Update"}
             </button>
           </div>
-        </div>
+        </form>
       </dialog>
     </>
   );

@@ -1,22 +1,17 @@
-import { Habit } from "../types";
+import { view } from "@/lib/habitSlice";
+import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 
-interface ListProps {
-  habits: Habit[];
-  onClick?: (habit: Habit) => void;
-}
+export default function List() {
+  const habitList = useAppSelector((state) => state.habit.list);
+  const dispatch = useAppDispatch();
 
-export default function List(props: ListProps) {
   return (
     <div className="flex flex-col items-center justify-center gap-4 py-6 w-full">
-      {props.habits.map((habit) => (
+      {habitList.map((habit) => (
         <div
-          key={habit.id}
+          key={habit.id!}
           className="card bg-base-100 w-full sm:w-96 shadow-xl"
-          onClick={() => {
-            if (props.onClick) {
-              props.onClick({ ...habit });
-            }
-          }}
+          onClick={() => dispatch(view(habit.id!))}
         >
           <div className="card-body">
             <h2 className="card-title line-clamp-1">{habit.name}</h2>
