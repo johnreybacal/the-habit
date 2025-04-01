@@ -3,7 +3,7 @@ import { Habit, habitSchema } from "../types";
 import { ValidationError } from "yup";
 import classNames from "classnames";
 import { useAppSelector, useAppDispatch } from "@/lib/hooks";
-import { init, close, set, save } from "@/lib/habitSlice";
+import { init, close, set, save } from "@/lib/slices/habitSlice";
 
 const emptyHabit: Habit = {
   id: "",

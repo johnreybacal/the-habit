@@ -1,4 +1,4 @@
-import { view } from "@/lib/habitSlice";
+import { view } from "@/lib/slices/habitSlice";
 import { useAppDispatch, useAppSelector } from "@/lib/hooks";
 
 export default function List() {

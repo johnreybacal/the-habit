@@ -1,5 +1,5 @@
 import { configureStore } from "@reduxjs/toolkit";
-import habitReducer from "@/lib/habitSlice";
+import habitReducer from "@/lib/slices/habitSlice";
 
 export const makeStore = () => {
   return configureStore({
